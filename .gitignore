@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Web build output (generated automatically during build)
+www/
+
+# Android Gradle local caches & build outputs
+.gradle/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+android/*.iml
+android/app/*.iml
+
+# Package outputs
+*.apk
+*.aab
+*.log
+
+# System files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,79 @@
+:root {
+  --bg-deep: #090b10;
+  --bg-surface: #121620;
+  --bg-elevated: #191f2e;
+  --bg-card-hover: #21293d;
+
+  --border-subtle: rgba(212, 163, 89, 0.16);
+  --border-strong: rgba(212, 163, 89, 0.42);
+
+  --text-primary: #eef0f4;
+  --text-secondary: #a8b2c5;
+  --text-muted: #707b91;
+
+  --accent-gold: #d4a359;
+  --accent-gold-bright: #f0c276;
+  --accent-ember: #d96b38;
+  --accent-crimson: #d94c4c;
+  --accent-emerald: #48a878;
+  --accent-violet: #9e6bd6;
+  --accent-azure: #52a9ff;
+
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.48);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font-sans: 'Segoe UI', 'Tahoma', 'Arial', system-ui, -apple-system, sans-serif;
+  --transition-fast: 160ms ease;
+
+  /* Mobile Safe Area Insets */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  direction: rtl;
+  overscroll-behavior-y: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection only on narrative and reading areas */
+.story-card, .event-body, .ending-desc, .modal-body {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.hidden {
+  display: none !important;
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090b10">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>الظل التاه | لعبة تقمص أدوار حياتية</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="ambient-bg" aria-hidden="true"></div>
+
+  <!-- Commercial Title / Main Menu Screen -->
+  <section id="main-menu-screen" class="main-menu-screen">
+    <div class="menu-card">
+      <div class="menu-crest-wrap">
+        <img src="assets/ui/game_crest.jpg" alt="شعار الظل التاه" class="menu-crest-img">
+      </div>
+      <div class="menu-copy">
+        <span class="menu-badge">الإصدار التجاري v6 • عالم بشري قاسٍ (7–25 سنة)</span>
+        <h1 class="menu-title">الظل التاه</h1>
+        <p class="menu-tagline">
+          غريبٌ تفتح عينيك في جسد طفلٍ وسط عالمٍ لا تفهمه ولا ينتمي إليك؛ بين الفيلق، نقابة الظل، اتحادات التجار، ومحاكم التفتيش — ثمانية عشر عاماً من القرارات المصيرية والمواجهات التكتيكية حتى سن الخامسة والعشرين.
+        </p>
+
+        <div id="menu-legacy-banner" class="legacy-banner hidden"></div>
+
+        <div class="difficulty-picker" role="radiogroup" aria-label="اختيار الصعوبة">
+          <button type="button" class="diff-pill" data-diff="normal">
+            <strong>عادي</strong>
+            <small>فرصة نجاة أوسع</small>
+          </button>
+          <button type="button" class="diff-pill active" data-diff="hard">
+            <strong>قاسٍ (موصى به)</strong>
+            <small>ندوب دائمة وضرائب حقيقية</small>
+          </button>
+          <button type="button" class="diff-pill" data-diff="nightmare">
+            <strong>كابوسي</strong>
+            <small>موتٌ نهائي بلا رحمة</small>
+          </button>
+        </div>
+
+        <div class="menu-actions-grid">
+          <button id="btn-menu-continue" class="primary-btn hidden" type="button">متابعة الرحلة المحفوظة</button>
+          <button id="btn-menu-new" class="primary-btn" type="button">بدء رحلة جديدة</button>
+          <button id="btn-menu-reincarnation" class="secondary-btn diamond-btn" type="button">💎 متجر العودة (شظايا الماس)</button>
+          <button id="btn-menu-saves" class="secondary-btn" type="button">ملفات الحفظ (3)</button>
+          <button id="btn-menu-hall" class="secondary-btn" type="button">قاعة النهايات والإنجازات</button>
+          <button id="btn-menu-settings" class="secondary-btn" type="button">الإعدادات</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Gameplay Shell -->
+  <div id="app" class="app-shell hidden">
+    <header class="hud-bar">
+      <div class="hud-brand">
+        <img src="assets/ui/game_crest.jpg" alt="الظل التاه" class="hud-crest-thumb">
+        <div class="brand-meta">
+          <h2 class="brand-title">الظل التاه</h2>
+          <span id="hud-chapter-city" class="brand-subtitle">الفصل 1 • ثغر الرماد</span>
+        </div>
+      </div>
+
+      <div class="hud-timeline">
+        <div class="timeline-text">
+          <span id="hud-age">العمر: 7</span>
+          <span class="dot-sep">•</span>
+          <span id="hud-season">الربيع</span>
+          <span class="dot-sep">•</span>
+          <span id="hud-turn-counter">1 / 96</span>
+        </div>
+        <div class="progress-track">
+          <div id="hud-progress-fill" class="progress-fill" style="width: 1%;"></div>
+        </div>
+      </div>
+
+      <div class="hud-vitals">
+        <div class="vital-pill vital-hp" title="الصحة">
+          <span>❤</span><span id="hud-hp">90/90</span>
+        </div>
+        <div class="vital-pill vital-stamina" title="الجهد">
+          <span>⚡</span><span id="hud-stamina">100/100</span>
+        </div>
+        <div class="vital-pill vital-gold" title="الذهب">
+          <span>🪙</span><span id="hud-gold">15</span>
+        </div>
+        <div id="hud-debt-pill" class="vital-pill vital-debt hidden" title="الدين القائم">
+          <span>⚖</span><span id="hud-debt">0</span>
+        </div>
+        <div class="vital-pill vital-suspicion" title="الشبهة">
+          <span>👁</span><span id="hud-suspicion">0%</span>
+        </div>
+      </div>
+
+      <nav class="hud-tools" aria-label="أدوات سريعة">
+        <button id="btn-open-map" class="tool-btn" type="button">🗺 الخريطة</button>
+        <button id="btn-open-shop" class="tool-btn" type="button">🛒 المتجر والمصرف</button>
+        <button id="btn-open-timeline" class="tool-btn" type="button">🌿 الشجرة</button>
+        <button id="btn-open-hall" class="tool-btn" type="button">🏆 الإنجازات</button>
+        <button id="btn-open-saves" class="tool-btn" type="button">💾 حفظ</button>
+        <button id="btn-back-menu" class="tool-btn" type="button" title="القائمة الرئيسية">🏠</button>
+      </nav>
+    </header>
+
+    <main class="game-layout">
+      <!-- Primary Cinematic Stage -->
+      <section class="stage-panel">
+        <div class="scene-banner">
+          <img id="scene-banner-img" src="assets/scenes/burning_origin.jpg" alt="المشهد الحالي" class="scene-banner-img">
+          <div class="scene-banner-overlay">
+            <div class="scene-tags">
+              <span id="scene-city-badge" class="scene-badge">ثغر الرماد</span>
+              <span id="scene-diff-badge" class="scene-badge badge-muted">صعوبة: قاسٍ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Turn Outcome Log Banner -->
+        <div id="outcome-banner" class="outcome-banner hidden" aria-live="polite"></div>
+
+        <!-- Speaker Portrait + Dialogue Header -->
+        <div id="speaker-card" class="speaker-card">
+          <img id="speaker-portrait" src="assets/characters/protagonist.jpg" alt="المتحدث" class="speaker-portrait">
+          <div class="speaker-meta">
+            <div class="speaker-top">
+              <strong id="speaker-name">الظل التاه (أنت)</strong>
+              <span id="speaker-rel-badge" class="rel-pill">غريب</span>
+            </div>
+            <span id="speaker-role" class="speaker-role">الغريب المجهول الأصل</span>
+          </div>
+        </div>
+
+        <!-- Narrative Prose -->
+        <article class="story-card">
+          <h3 id="event-title" class="event-title"></h3>
+          <p id="event-body" class="event-body"></p>
+        </article>
+
+        <!-- Dynamic Interaction Area: Choices OR Tactical Combat/Debate OR Ending -->
+        <div id="stage-interaction" class="stage-interaction">
+          <div id="choices-container" class="choices-list"></div>
+
+          <div id="combat-board" class="combat-board hidden">
+            <div class="combat-header">
+              <div>
+                <span id="combat-mode-badge" class="combat-mode-pill">قتال تكتيكي</span>
+                <h4 id="combat-enemy-name" class="combat-enemy-name">خصم</h4>
+              </div>
+              <div id="combat-intent-banner" class="combat-intent">⚠ الخصم يستعد...</div>
+            </div>
+
+            <div class="combat-bars-grid">
+              <div class="combatant-box">
+                <div class="bar-label"><span>صحتك</span><span id="c-player-hp">90/90</span></div>
+                <div class="bar-track"><div id="c-player-hp-bar" class="bar-fill fill-hp"></div></div>
+                <div class="bar-label"><span>ثباتك/درعك</span><span id="c-player-poise">18/18</span></div>
+                <div class="bar-track"><div id="c-player-poise-bar" class="bar-fill fill-poise"></div></div>
+                <div id="c-player-ap" class="ap-pill">⚡ نقاط الفعل: 2 / 2</div>
+              </div>
+
+              <div class="combatant-box enemy-box">
+                <div class="bar-label"><span>صحة الخصم</span><span id="c-enemy-hp">60/60</span></div>
+                <div class="bar-track"><div id="c-enemy-hp-bar" class="bar-fill fill-crimson"></div></div>
+                <div class="bar-label"><span>ثبات الخصم</span><span id="c-enemy-poise">15/15</span></div>
+                <div class="bar-track"><div id="c-enemy-poise-bar" class="bar-fill fill-poise"></div></div>
+                <div id="c-enemy-status" class="status-tags"></div>
+              </div>
+            </div>
+
+            <div id="combat-actions" class="combat-actions-grid">
+              <button type="button" class="combat-btn" data-cact="balanced_strike">⚔ ضربة متوازنة <small>(1 AP)</small></button>
+              <button type="button" class="combat-btn" data-cact="heavy_break">🪓 كاسر الدرع <small>(2 AP)</small></button>
+              <button type="button" class="combat-btn" data-cact="guard_counter">🛡 صدّ وتحصين <small>(1 AP)</small></button>
+              <button type="button" class="combat-btn" data-cact="feint_trick">🗡 خدعة ظل <small>(1 AP)</small></button>
+              <button type="button" class="combat-btn btn-warn" data-cact="retreat">🏃 انسحاب تكتيكي</button>
+              <button type="button" class="combat-btn btn-muted" data-cact="end_round">⏭ إنهاء الجولة</button>
+            </div>
+
+            <div id="combat-potion-strip" class="combat-potion-strip"></div>
+            <div id="combat-log" class="combat-log"></div>
+          </div>
+
+          <div id="ending-panel" class="ending-panel hidden">
+            <h3 id="ending-title" class="ending-title"></h3>
+            <p id="ending-desc" class="ending-desc"></p>
+            <div id="ending-diamonds-box" class="ending-diamonds-box"></div>
+            <div id="ending-prestige-box" class="ending-prestige-box"></div>
+            <div class="ending-actions">
+              <button id="btn-end-reincarnation" class="primary-btn diamond-btn" type="button">💎 متجر العودة (شظايا الماس)</button>
+              <button id="btn-end-timeline" class="secondary-btn" type="button">🌿 استعراض شجرة الخط الزمني</button>
+              <button id="btn-end-new-run" class="secondary-btn" type="button">بدء رحلة جديدة</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RPG Drawer Sidebar -->
+      <aside class="sidebar-panel">
+        <div class="mobile-sidebar-header">
+          <div class="mobile-sidebar-title">لوحة البطل والمقتنيات</div>
+          <button type="button" id="btn-mobile-back-to-stage" class="mini-btn mobile-back-btn">↩ العودة للقصة</button>
+        </div>
+
+        <div class="sidebar-tabs" role="tablist">
+          <button class="tab-btn active" data-tab="hero" type="button">البطل</button>
+          <button class="tab-btn" data-tab="gear" type="button">التجهيز</button>
+          <button class="tab-btn" data-tab="cast" type="button">الشخصيات</button>
+          <button class="tab-btn" data-tab="estate" type="button">الأملاك</button>
+        </div>
+
+        <section id="tab-panel-hero" class="tab-content active">
+          <div class="companion-mini-card">
+            <img id="side-companion-img" src="assets/characters/protagonist.jpg" alt="الرفيق" class="companion-mini-img">
+            <div>
+              <small class="muted-label">الرفيق النشط</small>
+              <div id="side-companion-name" class="companion-mini-name">لا يوجد مرافق</div>
+              <small id="side-companion-bonus" class="muted-label">تعرّف على الشخصيات لضمّ مرافق</small>
+            </div>
+          </div>
+
+          <h4 class="sub-title">السمات الأساسية</h4>
+          <div id="stats-grid" class="stats-grid"></div>
+
+          <h4 class="sub-title">المهارات المكتسبة</h4>
+          <div id="skills-grid" class="skills-grid"></div>
+
+          <h4 class="sub-title">الندوب الدائمة</h4>
+          <div id="scars-list" class="scars-list"></div>
+        </section>
+
+        <section id="tab-panel-gear" class="tab-content">
+          <h4 class="sub-title">خانات التجهيز البصرية</h4>
+          <div id="paperdoll-grid" class="paperdoll-grid"></div>
+
+          <h4 class="sub-title">حزام الجرعات السريع (3 جيوب)</h4>
+          <div id="potion-belt-grid" class="potion-belt-grid"></div>
+
+          <h4 class="sub-title">المقتنيات المملوكة</h4>
+          <div id="owned-gear-list" class="owned-gear-list"></div>
+        </section>
+
+        <section id="tab-panel-cast" class="tab-content">
+          <h4 class="sub-title">موازين القوى الأربع</h4>
+          <div id="factions-list" class="factions-list"></div>
+
+          <h4 class="sub-title">طاقم الشخصيات</h4>
+          <div id="cast-roster-list" class="cast-roster-list"></div>
+        </section>
+
+        <section id="tab-panel-estate" class="tab-content">
+          <h4 class="sub-title">الاقتصاد والعقارات</h4>
+          <div id="economy-summary-box" class="economy-summary-box"></div>
+
+          <h4 class="sub-title">العقارات المملوكة</h4>
+          <div id="owned-properties-list" class="owned-properties-list"></div>
+        </section>
+      </aside>
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar (Visible on mobile screens) -->
+    <nav id="mobile-bottom-nav" class="mobile-bottom-nav" aria-label="شريط تنقل الهاتف">
+      <button type="button" class="mob-nav-btn active" data-mob-tab="stage" id="mob-nav-stage">
+        <span class="mob-nav-icon">📜</span>
+        <span class="mob-nav-label">القصة</span>
+      </button>
+      <button type="button" class="mob-nav-btn" data-mob-tab="hero" id="mob-nav-hero">
+        <span class="mob-nav-icon">👤</span>
+        <span class="mob-nav-label">البطل</span>
+      </button>
+      <button type="button" class="mob-nav-btn" data-mob-tab="gear" id="mob-nav-gear">
+        <span class="mob-nav-icon">🎒</span>
+        <span class="mob-nav-label">العتاد</span>
+      </button>
+      <button type="button" class="mob-nav-btn" data-mob-tab="city" id="mob-nav-city">
+        <span class="mob-nav-icon">🏛️</span>
+        <span class="mob-nav-label">المدينة</span>
+      </button>
+      <button type="button" class="mob-nav-btn" data-mob-tab="menu" id="mob-nav-menu">
+        <span class="mob-nav-icon">⚙️</span>
+        <span class="mob-nav-label">القائمة</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Shared Modal Overlay -->
+  <div id="modal-overlay" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title" class="modal-title"></h3>
+        <button id="btn-close-modal" class="close-btn" type="button" aria-label="إغلاق">✕</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+      <div id="modal-footer" class="modal-footer hidden"></div>
+    </div>
+  </div>
+
+  <!-- Ordered Classic Scripts -->
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/v6/schema.js"></script>
+  <script defer src="js/v6/assets.js"></script>
+  <script defer src="js/data/v6/world.js"></script>
+  <script defer src="js/v6/world_time.js"></script>
+  <script defer src="js/data/v6/gear_shop.js"></script>
+  <script defer src="js/v6/combat.js"></script>
+  <script defer src="js/data/v6/characters_achievements.js"></script>
+  <script defer src="js/v6/characters_achievements.js"></script>
+  <script defer src="js/data/v6/events_ch1.js"></script>
+  <script defer src="js/data/v6/events_ch2.js"></script>
+  <script defer src="js/data/v6/events_ch3.js"></script>
+  <script defer src="js/v6/storage.js"></script>
+  <script defer src="js/v6/engine.js"></script>
+  <script defer src="js/v6/ui.js"></script>
+</body>
+</html>

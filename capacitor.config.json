@@ -1,0 +1,13 @@
+{
+  "appId": "com.aldhllaltah.game",
+  "appName": "الظل التاه",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#0b0e14"
+  }
+}

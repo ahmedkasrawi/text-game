@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">الظل التاه</string>
+    <string name="title_activity_main">الظل التاه</string>
+    <string name="package_name">com.aldhllaltah.game</string>
+    <string name="custom_url_scheme">com.aldhllaltah.game</string>
+</resources>

@@ -1,0 +1,548 @@
+(function (root) {
+  'use strict';
+
+  var GameApp = (root.GameApp = root.GameApp || {});
+
+  var ITEMS = {
+    // ===== SWORDS (balanced, parry bonus, combo synergy) =====
+    sword_iron: {
+      id: 'sword_iron',
+      name: 'سيف حديدي عتيق',
+      category: 'weapon',
+      weaponType: 'sword',
+      rarity: 'common',
+      price: 35,
+      minAge: 10,
+      attack: 10,
+      armorBreak: 3,
+      parryBonus: 0.14,
+      comboScale: 0.18,
+      image: 'assets/items/weapons/swords/sword_iron.jpg',
+      desc: 'نصل حديدي متوازن لصد الهجمات وبناء الضربات المتتابعة.'
+    },
+    sword_steel: {
+      id: 'sword_steel',
+      name: 'سيف الفولاذ المصفّى',
+      category: 'weapon',
+      weaponType: 'sword',
+      rarity: 'rare',
+      price: 120,
+      minAge: 14,
+      attack: 17,
+      armorBreak: 5,
+      parryBonus: 0.22,
+      comboScale: 0.25,
+      image: 'assets/items/weapons/swords/sword_steel.jpg',
+      desc: 'فولاذ مسقّى يضاعف براعة المبارز ويستثمر ثغرات الخصم.'
+    },
+    sword_royal: {
+      id: 'sword_royal',
+      name: 'نصل الفيلق الملكي',
+      category: 'weapon',
+      weaponType: 'sword',
+      rarity: 'epic',
+      price: 310,
+      minAge: 18,
+      attack: 26,
+      armorBreak: 8,
+      parryBonus: 0.3,
+      comboScale: 0.32,
+      image: 'assets/items/weapons/swords/sword_royal.jpg',
+      desc: 'سلاح النخبة والفرسان؛ يجمع دقة الصدّ وقوة الحسم.'
+    },
+
+    // ===== AXES (heavy damage & poise/armor shatter) =====
+    axe_woodman: {
+      id: 'axe_woodman',
+      name: 'فأس الثغر الثقيل',
+      category: 'weapon',
+      weaponType: 'axe',
+      rarity: 'common',
+      price: 40,
+      minAge: 10,
+      attack: 13,
+      armorBreak: 8,
+      parryBonus: 0.04,
+      image: 'assets/items/weapons/axes/axe_woodman.jpg',
+      desc: 'فأس ثقيلة تحطم تروس الخشب والجلد وتهز ثبات الخصم.'
+    },
+    axe_war: {
+      id: 'axe_war',
+      name: 'فأس كاسر الدروع',
+      category: 'weapon',
+      weaponType: 'axe',
+      rarity: 'rare',
+      price: 135,
+      minAge: 14,
+      attack: 21,
+      armorBreak: 14,
+      parryBonus: 0.06,
+      image: 'assets/items/weapons/axes/axe_war.jpg',
+      desc: 'مصممة لتهشيم صفائح الفولاذ وكسر وضعية الدفاع لدى الخصوم المدرّعين.'
+    },
+    axe_executioner: {
+      id: 'axe_executioner',
+      name: 'فأس الجلاد المزدوج',
+      category: 'weapon',
+      weaponType: 'axe',
+      rarity: 'epic',
+      price: 330,
+      minAge: 18,
+      attack: 31,
+      armorBreak: 22,
+      parryBonus: 0.08,
+      image: 'assets/items/weapons/axes/axe_executioner.jpg',
+      desc: 'شفرة قرمزية مرعبة تشق الدرع والعظم معاً وتُربك أعتى القادة.'
+    },
+
+    // ===== SPEARS (reach + counter-strike riposte when defending) =====
+    spear_militia: {
+      id: 'spear_militia',
+      name: 'رمح الحرس الخشبي',
+      category: 'weapon',
+      weaponType: 'spear',
+      rarity: 'common',
+      price: 38,
+      minAge: 10,
+      attack: 10,
+      armorBreak: 5,
+      parryBonus: 0.16,
+      counterStrike: true,
+      counterRatio: 0.6,
+      image: 'assets/items/weapons/spears/spear_militia.jpg',
+      desc: 'يبقي الخصم بعيداً ويردّ تلقائياً بطعنة عندما تختار وضعية الصدّ.'
+    },
+    spear_knight: {
+      id: 'spear_knight',
+      name: 'رمح الفرسان المجنّح',
+      category: 'weapon',
+      weaponType: 'spear',
+      rarity: 'rare',
+      price: 130,
+      minAge: 14,
+      attack: 17,
+      armorBreak: 9,
+      parryBonus: 0.22,
+      counterStrike: true,
+      counterRatio: 0.8,
+      image: 'assets/items/weapons/spears/spear_knight.jpg',
+      desc: 'أجنحته الفولاذية تمنع الالتفاف وتوجّه رداً مدمراً لكل مهاجم متهور.'
+    },
+    spear_halberd: {
+      id: 'spear_halberd',
+      name: 'مطرد الثغور الحديدي',
+      category: 'weapon',
+      weaponType: 'spear',
+      rarity: 'epic',
+      price: 325,
+      minAge: 18,
+      attack: 25,
+      armorBreak: 15,
+      parryBonus: 0.25,
+      counterStrike: true,
+      counterRatio: 1.0,
+      image: 'assets/items/weapons/spears/spear_halberd.jpg',
+      desc: 'سلاح الحراس النخبوي؛ يجمع طعنة الردّ الفورية مع قوة اختراق الدروع.'
+    },
+
+    // ===== BOWS (free Round-0 preemptive opening shot + bleed/poison) =====
+    bow_hunter: {
+      id: 'bow_hunter',
+      name: 'قوس الصيد الخشبي',
+      category: 'weapon',
+      weaponType: 'bow',
+      rarity: 'common',
+      price: 42,
+      minAge: 10,
+      attack: 11,
+      armorBreak: 3,
+      parryBonus: 0.08,
+      preemptive: true,
+      bleedOnCrit: 3,
+      image: 'assets/items/weapons/bows/bow_hunter.jpg',
+      desc: 'يطلق سهماً مجانياً قبل بدء التحام العدو، ممتاز للصيد والكمائن.'
+    },
+    bow_recurve: {
+      id: 'bow_recurve',
+      name: 'قوس الحرب المنحني',
+      category: 'weapon',
+      weaponType: 'bow',
+      rarity: 'rare',
+      price: 145,
+      minAge: 14,
+      attack: 18,
+      armorBreak: 7,
+      parryBonus: 0.12,
+      preemptive: true,
+      bleedOnCrit: 5,
+      image: 'assets/items/weapons/bows/bow_recurve.jpg',
+      desc: 'سهمه المركّب يخترق صفائح الدروع من بعيد ويُضعف الخصم قبل المواجهة.'
+    },
+    bow_assassin: {
+      id: 'bow_assassin',
+      name: 'قوس الظل الصامت',
+      category: 'weapon',
+      weaponType: 'bow',
+      rarity: 'legendary',
+      price: 360,
+      minAge: 17,
+      blackMarket: true,
+      attack: 26,
+      armorBreak: 10,
+      parryBonus: 0.16,
+      preemptive: true,
+      bleedOnCrit: 7,
+      poisonOnHit: 5,
+      image: 'assets/items/weapons/bows/bow_assassin.jpg',
+      desc: 'سلاح سري من السوق السوداء؛ يفتتح المعركة بسهم مسموم قبل أن يراك الخصم.'
+    },
+
+    // ===== ARMORS =====
+    armor_traveler: {
+      id: 'armor_traveler',
+      name: 'عباءة السفر المبطنة',
+      category: 'armor',
+      rarity: 'common',
+      price: 45,
+      minAge: 8,
+      defense: 4,
+      poiseBonus: 8,
+      image: 'assets/items/armors/armor_traveler.jpg',
+      desc: 'جلد مبطن وصوف خشن يقيك البرد وضربات الأزقة الخفيفة.'
+    },
+    armor_shadow_cloak: {
+      id: 'armor_shadow_cloak',
+      name: 'رداء نقابة الظل',
+      category: 'armor',
+      rarity: 'rare',
+      price: 135,
+      minAge: 13,
+      blackMarket: true,
+      defense: 7,
+      poiseBonus: 10,
+      dodgeBonus: 0.14,
+      image: 'assets/items/armors/armor_shadow_cloak.jpg',
+      desc: 'عباءة ليلية داكنة تمنح خفة حركة وقدرة على تفادي الضربات المباشرة.'
+    },
+    armor_merchant_coat: {
+      id: 'armor_merchant_coat',
+      name: 'معطف المخمل المزرّد',
+      category: 'armor',
+      rarity: 'rare',
+      price: 160,
+      minAge: 14,
+      defense: 9,
+      poiseBonus: 14,
+      debateBonus: 5,
+      image: 'assets/items/armors/armor_merchant_coat.jpg',
+      desc: 'مخمل فاخر يبطّنه زرد خفي؛ يحميك من الخناجر ويرفع حضورك في المجالس.'
+    },
+    armor_legion_plate: {
+      id: 'armor_legion_plate',
+      name: 'درع صفائح الفيلق',
+      category: 'armor',
+      rarity: 'epic',
+      price: 280,
+      minAge: 16,
+      defense: 16,
+      poiseBonus: 26,
+      image: 'assets/items/armors/armor_legion_plate.jpg',
+      desc: 'فولاذ عسكري مطروق يمتص الضربات القاتلة ويصمد أمام أثقل الفؤوس.'
+    },
+    armor_inquisitor: {
+      id: 'armor_inquisitor',
+      name: 'كسوة المحقق المدرّعة',
+      category: 'armor',
+      rarity: 'epic',
+      price: 290,
+      minAge: 17,
+      defense: 14,
+      poiseBonus: 22,
+      debateBonus: 8,
+      image: 'assets/items/armors/armor_inquisitor.jpg',
+      desc: 'رداء التفتيش القرمزي المصفح؛ يرهب الخصوم في الساحة وفي قاعة المحاكمة.'
+    },
+
+    // ===== POTIONS (consumables) =====
+    potion_heal: {
+      id: 'potion_heal',
+      name: 'قارورة الشفاء القرمزية',
+      category: 'potion',
+      rarity: 'common',
+      price: 24,
+      minAge: 7,
+      healHp: 35,
+      image: 'assets/items/potions/potion_heal.jpg',
+      desc: 'تعيد 35 نقطة صحة فوراً في خضم القتال أو السفر.'
+    },
+    potion_stamina: {
+      id: 'potion_stamina',
+      name: 'شراب العزم العنبري',
+      category: 'potion',
+      rarity: 'uncommon',
+      price: 28,
+      minAge: 10,
+      staminaRestore: 40,
+      grantAp: 1,
+      image: 'assets/items/potions/potion_stamina.jpg',
+      desc: 'منشط عشبي يمنح +1 نقطة فعل إضافية داخل المواجهة ويستعيد 40 جهداً.'
+    },
+    potion_poison: {
+      id: 'potion_poison',
+      name: 'سمّ النصل الصامت',
+      category: 'potion',
+      rarity: 'rare',
+      price: 48,
+      minAge: 13,
+      blackMarket: true,
+      coatPoisonRounds: 3,
+      poisonDmg: 7,
+      image: 'assets/items/potions/potion_poison.jpg',
+      desc: 'يطلي سلاحك بسمّ مستمر لـ 3 جولات يفتك بالخصم مهما بلغ درعه.'
+    },
+    potion_antidote: {
+      id: 'potion_antidote',
+      name: 'ترياق فيرا الفضي',
+      category: 'potion',
+      rarity: 'rare',
+      price: 34,
+      minAge: 10,
+      cleanse: true,
+      healHp: 16,
+      image: 'assets/items/potions/potion_antidote.jpg',
+      desc: 'يطهّر الجسم من السموم والنزيف ويعيد 16 صحة فوراً.'
+    },
+
+    // ===== ACCESSORIES =====
+    acc_medallion: {
+      id: 'acc_medallion',
+      name: 'قلادة التائه الغامضة',
+      category: 'accessory',
+      rarity: 'rare',
+      price: 95,
+      minAge: 10,
+      statBonus: { ins: 1 },
+      poiseBonus: 8,
+      image: 'assets/items/accessories/acc_medallion.jpg',
+      desc: 'قلادة معدنية تشحذ حدسك وتمنح ثباتاً غريباً وسط المخاطر.'
+    },
+    acc_cipher: {
+      id: 'acc_cipher',
+      name: 'ختم الشيفرة النحاسي',
+      category: 'accessory',
+      rarity: 'rare',
+      price: 140,
+      minAge: 13,
+      blackMarket: true,
+      statBonus: { int: 1 },
+      debateBonus: 4,
+      image: 'assets/items/accessories/acc_cipher.jpg',
+      desc: 'يفتح قنوات الظل ويكشف رسائل الخصوم في المواجهات السياسية.'
+    },
+    acc_signet: {
+      id: 'acc_signet',
+      name: 'خاتم الختم النبيل',
+      category: 'accessory',
+      rarity: 'epic',
+      price: 220,
+      minAge: 16,
+      statBonus: { cha: 2 },
+      tradeDiscountBonus: 0.08,
+      debateBonus: 7,
+      image: 'assets/items/accessories/acc_signet.jpg',
+      desc: 'ختم يفرض هيبتك أمام المصارف والبلاط ويخفض أسعار الصفقات.'
+    }
+  };
+
+  var ENCOUNTER_TEMPLATES = {
+    frontier_wolf: {
+      id: 'frontier_wolf',
+      mode: 'combat',
+      name: 'ذئب الأحراش الجائع',
+      hp: 36,
+      poise: 8,
+      attack: 8,
+      armorBreak: 2,
+      lethal: false,
+      rewardGold: 10,
+      rewardRep: 2,
+      pattern: ['quick_slash', 'quick_slash', 'heavy_strike']
+    },
+    tark_childhood_duel: {
+      id: 'tark_childhood_duel',
+      mode: 'combat',
+      name: 'طارق (نزال النصال الخشبية)',
+      hp: 42,
+      poise: 12,
+      attack: 7,
+      armorBreak: 3,
+      lethal: false,
+      rewardGold: 8,
+      rewardRep: 3,
+      pattern: ['quick_slash', 'guard_stance', 'quick_slash']
+    },
+    inquisition_novice_inquest: {
+      id: 'inquisition_novice_inquest',
+      mode: 'debate',
+      name: 'استجواب الشمامسة المبتدئين',
+      hp: 44,
+      poise: 14,
+      attack: 8,
+      armorBreak: 4,
+      lethal: false,
+      rewardGold: 12,
+      rewardRep: 5,
+      pattern: ['harsh_accusation', 'guard_stance', 'quick_slash']
+    },
+    quarry_bandit: {
+      id: 'quarry_bandit',
+      mode: 'combat',
+      name: 'قاطع طريق المقالع المهجورة',
+      hp: 60,
+      poise: 18,
+      attack: 13,
+      armorBreak: 5,
+      lethal: false,
+      scarOnDefeat: 'scar_leg',
+      rewardGold: 32,
+      rewardRep: 6,
+      pattern: ['heavy_strike', 'quick_slash', 'guard_stance']
+    },
+    alley_cutthroat: {
+      id: 'alley_cutthroat',
+      mode: 'combat',
+      name: 'قاتل من الأحياء السفلى',
+      hp: 58,
+      poise: 14,
+      attack: 12,
+      armorBreak: 4,
+      poisonAttack: 4,
+      lethal: false,
+      scarOnDefeat: 'scar_eye',
+      rewardGold: 26,
+      rewardRep: 4,
+      pattern: ['quick_slash', 'poison_dart', 'heavy_strike']
+    },
+    armored_deserter: {
+      id: 'armored_deserter',
+      mode: 'combat',
+      name: 'فارس منشق مدرّع',
+      hp: 82,
+      poise: 36,
+      attack: 17,
+      armorBreak: 9,
+      lethal: false,
+      scarOnDefeat: 'scar_leg',
+      rewardGold: 55,
+      rewardRep: 10,
+      pattern: ['guard_stance', 'heavy_strike', 'quick_slash']
+    },
+    shadow_duelist: {
+      id: 'shadow_duelist',
+      mode: 'combat',
+      name: 'مبارز الظل المحترف',
+      hp: 96,
+      poise: 24,
+      attack: 21,
+      armorBreak: 7,
+      poisonAttack: 6,
+      lethal: true,
+      scarOnDefeat: 'scar_tremor',
+      rewardGold: 90,
+      rewardRep: 14,
+      pattern: ['poison_dart', 'quick_slash', 'heavy_strike']
+    },
+    inquisition_trial: {
+      id: 'inquisition_trial',
+      mode: 'debate',
+      name: 'جلسة محاكم التفتيش',
+      hp: 75,
+      poise: 26,
+      attack: 15,
+      armorBreak: 8,
+      lethal: false,
+      scarOnDefeat: 'scar_brand',
+      rewardGold: 45,
+      rewardRep: 16,
+      pattern: ['harsh_accusation', 'guard_stance', 'heavy_strike']
+    },
+    dock_smuggler: {
+      id: 'dock_smuggler',
+      mode: 'combat',
+      name: 'مهرب أرصفة ميناء الملح',
+      hp: 70,
+      poise: 20,
+      attack: 14,
+      armorBreak: 5,
+      lethal: false,
+      rewardGold: 45,
+      rewardRep: 6,
+      pattern: ['quick_slash', 'heavy_strike', 'guard_stance']
+    },
+    royal_duelist: {
+      id: 'royal_duelist',
+      mode: 'combat',
+      name: 'مبارز الأكاديمية الملكية',
+      hp: 85,
+      poise: 28,
+      attack: 18,
+      armorBreak: 8,
+      lethal: false,
+      scarOnDefeat: 'scar_arm',
+      rewardGold: 60,
+      rewardRep: 10,
+      pattern: ['guard_stance', 'quick_slash', 'heavy_strike']
+    },
+    corrupt_inquisitor: {
+      id: 'corrupt_inquisitor',
+      mode: 'debate',
+      name: 'المحقق الفاسد لبلدة الميناء',
+      hp: 65,
+      poise: 22,
+      attack: 13,
+      armorBreak: 6,
+      lethal: false,
+      scarOnDefeat: 'scar_brand',
+      rewardGold: 38,
+      rewardRep: 8,
+      pattern: ['harsh_accusation', 'quick_slash', 'guard_stance']
+    },
+    grand_inquisitor_boss: {
+      id: 'grand_inquisitor_boss',
+      mode: 'debate',
+      name: 'رئيس محاكم التفتيش الأعلى',
+      hp: 110,
+      poise: 38,
+      attack: 22,
+      armorBreak: 10,
+      lethal: false,
+      scarOnDefeat: 'scar_brand',
+      rewardGold: 120,
+      rewardRep: 25,
+      pattern: ['harsh_accusation', 'guard_stance', 'heavy_strike']
+    },
+    renegade_marshal_boss: {
+      id: 'renegade_marshal_boss',
+      mode: 'combat',
+      name: 'مارشال الفيلق المنشق',
+      hp: 130,
+      poise: 45,
+      attack: 26,
+      armorBreak: 12,
+      lethal: true,
+      scarOnDefeat: 'scar_arm',
+      rewardGold: 150,
+      rewardRep: 30,
+      pattern: ['heavy_strike', 'guard_stance', 'quick_slash']
+    }
+  };
+
+  GameApp.V6ShopData = {
+    ITEMS: ITEMS,
+    ENCOUNTER_TEMPLATES: ENCOUNTER_TEMPLATES
+  };
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = GameApp.V6ShopData;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
